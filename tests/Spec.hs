@@ -1,7 +1,5 @@
 module Main where
-
-import System (runSystem)
-
+import System
 
 main :: IO ()
 main = runSystem
