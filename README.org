@@ -1,0 +1,11 @@
+* TLA+ and Haskell
+
+This repo demonstrates using TLA+ specs as a way of
+being the 'just before' language to design a spec
+that a program can be based on.
+
+It then goes on to use Haskell with mtl and quickcheck
+to define a highly testable interface and example
+spec.
+
+

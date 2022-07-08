@@ -1,0 +1,65 @@
+cabal-version:      2.4
+name:               okcfp-tla-plus-haskell
+version:            0.1.0.0
+
+
+synopsis: Demonstration of a TLA spec implementation
+
+
+description: This package is intended to be part of a
+             pair of programs that demonstrate using TLA+ and
+             Haskell together to build projects
+
+license-file:      LICENSE
+author: Scott Murphy
+maintainer: scottmurphy09@gmail.com
+build-type:        Simple
+extra-source-files: CHANGELOG.org README.org
+
+
+
+common deps
+ default-language: Haskell2010
+ ghc-options:
+    -Wall
+    -Werror
+    -Wincomplete-uni-patterns
+    -Wincomplete-record-updates
+ build-depends:
+      base,
+      containers,
+      text
+      mtl,
+      transformers
+
+
+executable okcfp-tla-plus-haskell
+    main-is:          Main.hs
+
+    -- Modules included in this executable, other than Main.
+    -- other-modules:
+
+    -- LANGUAGE extensions used by modules in this package.
+    -- other-extensions:
+    build-depends:    base ^>=4.15.1.0
+    hs-source-dirs:   app
+    default-language: Haskell2010
+
+library
+  import: deps
+  hs-source-dirs: src
+
+test-suite spec
+  import: deps
+  type: exitcode-stdio-1.0
+  hs-source-dirs: tests
+  main-is: Spec.hs
+  other-modules:
+  ghc-options:
+    -threaded
+    -rtsopts
+    -with-rtsopts=-N
+  build-depends:
+      hspec
+    , hedgehog
+    
