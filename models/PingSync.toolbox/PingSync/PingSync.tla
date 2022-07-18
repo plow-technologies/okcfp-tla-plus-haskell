@@ -73,10 +73,54 @@ Init ==
                 message |-> "None" ] 
   /\ time = 0
 
-Next == UNCHANGED << vars >>
+
+MessageChangeRequest ==
+  /\ server.message = "Change"
+  /\ server.state = "Active"
+  /\ server.status = "Connected"
+  /\ time' = time + 1
+  /\ server' = [server EXCEPT !.state = "InActive",
+                              !.status = "Unconnected",
+                              !.status = "New" ]
 
 
+(* The server is still inactive but the network connection is back *)
+(* We ping out to see if we can count it as active *)
+MessagePingRequest == 
+  /\ server.message = "Change"
+  /\ server.state = "InActive"
+  /\ server.status = "Connected"
+  /\ time' = time + 1
+  /\ server' = [server EXCEPT !.message = "Ping"] 
 
+(* The server is still inactive but the network connection is back *)
+(* We see a Pong and so set the connection active *)
+MessagePongRequest ==
+  /\ server.message = "Ping"
+  /\ server.state = "InActive"
+  /\ server.status = "Connected"
+  /\ time' = time + 1
+  /\ server' = [server EXCEPT !.message = "None",
+                              !.state = "Active"  ] 
+
+(* The Change sequences beginning with network change *)
+(* These represent the 'good' path *)   
+MessageResponseToChange  == 
+     \/ MessageChangeRequest
+     \/ MessagePingRequest
+     \/ MessagePongRequest
+
+MessageInitiateChange ==
+  /\ server.message = "None"
+  /\ server.state = "Active"
+  /\ server.status = "Connected"
+  /\ time' = time + 1
+  /\ server' = [server EXCEPT !.message = "Change"]
+
+
+Next == UNCHANGED  vars 
+      \/ MessageResponseToChange
+      \/ MessageInitiateChange
 (* -------------------------------------------------- *)
 (* Properties  *)
 (* -------------------------------------------------- *)
