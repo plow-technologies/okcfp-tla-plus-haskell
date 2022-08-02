@@ -8,4 +8,16 @@ It then goes on to use Haskell with mtl and quickcheck
 to define a highly testable interface and example
 spec.
 
+** Using nix to build the model.
+The haskell project can be ran by using 
+#+begin_src bash
+nix-shell ./nix/shell.nix
+#+end_src
 
+To get into a proper nix shell.
+From this point, run:
+#+begin_src bash
+  cabal v2-update
+  cabal v2-configure
+  cabal v2-build
+#+end_src

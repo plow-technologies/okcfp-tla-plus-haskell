@@ -46,7 +46,7 @@ vars == << server, time >>
 (* -------------------------------------------------- *)
 
 NetworkState == { "Active", "InActive" } 
-NetworkProfile == { "Old","New"}
+NetworkProfile == { "N1","N2"}
 Status ==  {"Connected", "Unconnected"}
 Messages == {"None", "Ping","Pong", "Change"}
 
@@ -68,7 +68,7 @@ Server == [ state : NetworkState ,
 
 Init ==
   /\ server = [ state |-> "Active" ,
-                profile |-> "Old",
+                profile |-> "N1",
                 status |-> "Connected",
                 message |-> "None" ] 
   /\ time = 0
@@ -81,11 +81,12 @@ MessageChangeRequest ==
   /\ time' = time + 1
   /\ server' = [server EXCEPT !.state = "InActive",
                               !.status = "Unconnected",
-                              !.status = "New" ]
+                              !.profile = "N2" ]
 
 
 (* The server is still inactive but the network connection is back *)
 (* We ping out to see if we can count it as active *)
+
 MessagePingRequest == 
   /\ server.message = "Change"
   /\ server.state = "InActive"
@@ -104,8 +105,8 @@ MessagePongRequest ==
                               !.state = "Active"  ] 
 
 (* The Change sequences beginning with network change *)
-(* These represent the 'good' path *)   
-MessageResponseToChange  == 
+  (* These represent the 'good' path *)
+MessageResponseToChange == 
      \/ MessageChangeRequest
      \/ MessagePingRequest
      \/ MessagePongRequest
@@ -117,7 +118,7 @@ MessageInitiateChange ==
   /\ time' = time + 1
   /\ server' = [server EXCEPT !.message = "Change"]
 
-
+  
 Next == UNCHANGED  vars 
       \/ MessageResponseToChange
       \/ MessageInitiateChange
@@ -130,8 +131,13 @@ Next == UNCHANGED  vars
 NoMessagesProp == [][server.status = "Unconnected" =>
                     server'.message = "None" ]_vars
 
+EventualPong == <>(server.message = "Ping") 
+
+Properties == NoMessagesProp /\ EventualPong
 
 
+TypeOK == server \in Server
+    /\         time \in Time   
 
 (* -------------------------------------------------- *)
 (* Model Format  *)
@@ -146,4 +152,5 @@ SPEC == Init
 
 =============================================================================
 \* Modification History
+\* Last modified Mon Aug 01 22:19:38 CDT 2022 by scott
 \* Created Fri Jul 15 20:15:56 CDT 2022 by scott
