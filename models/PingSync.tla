@@ -1,4 +1,5 @@
 ------------------------------ MODULE PingSync ------------------------------
+
 (*
 
 
@@ -94,6 +95,9 @@ MessagePingRequest ==
   /\ time' = time + 1
   /\ server' = [server EXCEPT !.message = "Ping"] 
 
+
+
+
 (* The server is still inactive but the network connection is back *)
 (* We see a Pong and so set the connection active *)
 MessagePongRequest ==
@@ -103,6 +107,7 @@ MessagePongRequest ==
   /\ time' = time + 1
   /\ server' = [server EXCEPT !.message = "None",
                               !.state = "Active"  ] 
+
 
 (* The Change sequences beginning with network change *)
   (* These represent the 'good' path *)
@@ -118,10 +123,22 @@ MessageInitiateChange ==
   /\ time' = time + 1
   /\ server' = [server EXCEPT !.message = "Change"]
 
+
+(* choose whether the network reconnects *)
+WorldConnectOrNo ==
+  /\ server.status = "Unconnected"
+  /\ LET Connection == CHOOSE c \in Status : c \in Status
+     IN /\  server' = [server EXCEPT !.status = Connection]
+        /\  time' = time + 1
   
-Next == UNCHANGED  vars 
+WorldActions ==
+  \/  WorldConnectOrNo
+
+  
+Next == UNCHANGED vars 
       \/ MessageResponseToChange
       \/ MessageInitiateChange
+      \/ WorldConnectOrNo  
 (* -------------------------------------------------- *)
 (* Properties  *)
 (* -------------------------------------------------- *)
@@ -152,5 +169,5 @@ SPEC == Init
 
 =============================================================================
 \* Modification History
-\* Last modified Mon Aug 01 22:19:38 CDT 2022 by scott
+\* Last modified Tue Aug 02 20:38:17 CDT 2022 by scott
 \* Created Fri Jul 15 20:15:56 CDT 2022 by scott

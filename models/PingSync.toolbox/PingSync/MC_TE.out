@@ -2,7 +2,7 @@
 TLC2 Version 2.16 of 31 December 2020 (rev: cdddf55)
 @!@!@ENDMSG 2262 @!@!@
 @!@!@STARTMSG 2187:0 @!@!@
-Running breadth-first search Model-Checking with fp 107 and seed -8825448602414538417 with 5 workers on 10 cores with 4857MB heap and 10921MB offheap memory [pid: 22888] (Mac OS X 10.16 x86_64, AdoptOpenJDK 14.0.1 x86_64, OffHeapDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 28 and seed -3029276142981188306 with 5 workers on 10 cores with 4857MB heap and 10921MB offheap memory [pid: 28125] (Mac OS X 10.16 x86_64, AdoptOpenJDK 14.0.1 x86_64, OffHeapDiskFPSet, DiskStateQueue).
 @!@!@ENDMSG 2187 @!@!@
 @!@!@STARTMSG 2220:0 @!@!@
 Starting SANY...
@@ -23,134 +23,371 @@ Semantic processing of module MC
 SANY finished.
 @!@!@ENDMSG 2219 @!@!@
 @!@!@STARTMSG 2185:0 @!@!@
-Starting... (2022-08-01 22:20:43)
+Starting... (2022-08-02 20:39:44)
 @!@!@ENDMSG 2185 @!@!@
 @!@!@STARTMSG 2189:0 @!@!@
 Computing initial states...
 @!@!@ENDMSG 2189 @!@!@
 @!@!@STARTMSG 2190:0 @!@!@
-Finished computing initial states: 1 distinct state generated at 2022-08-01 22:20:45.
+Finished computing initial states: 1 distinct state generated at 2022-08-02 20:39:46.
 @!@!@ENDMSG 2190 @!@!@
-@!@!@STARTMSG 2193:0 @!@!@
-Model checking completed. No error has been found.
-  Estimates of the probability that TLC did not check all reachable states
-  because two distinct states had the same fingerprint:
-  calculated (optimistic):  val = 4.9E-19
-@!@!@ENDMSG 2193 @!@!@
+@!@!@STARTMSG 2110:1 @!@!@
+Invariant TypeOK is violated.
+@!@!@ENDMSG 2110 @!@!@
+@!@!@STARTMSG 2121:1 @!@!@
+The behavior up to this point is:
+@!@!@ENDMSG 2121 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+1: <Initial predicate>
+/\ time = 0
+/\ server = [ state |-> "Active",
+  profile |-> "N1",
+  status |-> "Connected",
+  message |-> "None" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+2: <MessageInitiateChange line 120, col 3 to line 124, col 51 of module PingSync>
+/\ time = 1
+/\ server = [ state |-> "Active",
+  profile |-> "N1",
+  status |-> "Connected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+3: <MessageChangeRequest line 79, col 3 to line 85, col 48 of module PingSync>
+/\ time = 2
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Unconnected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+4: <WorldConnectOrNo line 129, col 3 to line 132, col 28 of module PingSync>
+/\ time = 3
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+5: <MessagePingRequest line 92, col 3 to line 96, col 49 of module PingSync>
+/\ time = 4
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Ping" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+6: <MessagePongRequest line 104, col 3 to line 109, col 51 of module PingSync>
+/\ time = 5
+/\ server = [ state |-> "Active",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "None" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+7: <MessageInitiateChange line 120, col 3 to line 124, col 51 of module PingSync>
+/\ time = 6
+/\ server = [ state |-> "Active",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+8: <MessageChangeRequest line 79, col 3 to line 85, col 48 of module PingSync>
+/\ time = 7
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Unconnected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+9: <WorldConnectOrNo line 129, col 3 to line 132, col 28 of module PingSync>
+/\ time = 8
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+10: <MessagePingRequest line 92, col 3 to line 96, col 49 of module PingSync>
+/\ time = 9
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Ping" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+11: <MessagePongRequest line 104, col 3 to line 109, col 51 of module PingSync>
+/\ time = 10
+/\ server = [ state |-> "Active",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "None" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+12: <MessageInitiateChange line 120, col 3 to line 124, col 51 of module PingSync>
+/\ time = 11
+/\ server = [ state |-> "Active",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+13: <MessageChangeRequest line 79, col 3 to line 85, col 48 of module PingSync>
+/\ time = 12
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Unconnected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+14: <WorldConnectOrNo line 129, col 3 to line 132, col 28 of module PingSync>
+/\ time = 13
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+15: <MessagePingRequest line 92, col 3 to line 96, col 49 of module PingSync>
+/\ time = 14
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Ping" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+16: <MessagePongRequest line 104, col 3 to line 109, col 51 of module PingSync>
+/\ time = 15
+/\ server = [ state |-> "Active",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "None" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+17: <MessageInitiateChange line 120, col 3 to line 124, col 51 of module PingSync>
+/\ time = 16
+/\ server = [ state |-> "Active",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+18: <MessageChangeRequest line 79, col 3 to line 85, col 48 of module PingSync>
+/\ time = 17
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Unconnected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+19: <WorldConnectOrNo line 129, col 3 to line 132, col 28 of module PingSync>
+/\ time = 18
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Change" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+20: <MessagePingRequest line 92, col 3 to line 96, col 49 of module PingSync>
+/\ time = 19
+/\ server = [ state |-> "InActive",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "Ping" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+21: <MessagePongRequest line 104, col 3 to line 109, col 51 of module PingSync>
+/\ time = 20
+/\ server = [ state |-> "Active",
+  profile |-> "N2",
+  status |-> "Connected",
+  message |-> "None" ]
+
+@!@!@ENDMSG 2217 @!@!@
 @!@!@STARTMSG 2201:0 @!@!@
-The coverage statistics at 2022-08-01 22:20:45
+The coverage statistics at 2022-08-02 20:39:46
 @!@!@ENDMSG 2201 @!@!@
 @!@!@STARTMSG 2773:0 @!@!@
-<Init line 69, col 1 to line 69, col 4 of module PingSync>: 1:1
+<Init line 70, col 1 to line 70, col 4 of module PingSync>: 2:2
 @!@!@ENDMSG 2773 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 70, col 3 to line 74, col 13 of module PingSync: 1
+  line 71, col 3 to line 75, col 13 of module PingSync: 2
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<MessageChangeRequest line 77, col 1 to line 77, col 20 of module PingSync>: 1:1
+<MessageChangeRequest line 78, col 1 to line 78, col 20 of module PingSync>: 4:8
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 78, col 6 to line 78, col 30 of module PingSync: 4
+  line 79, col 6 to line 79, col 30 of module PingSync: 48
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 78, col 6 to line 78, col 19 of module PingSync: 3
+  |line 79, col 6 to line 79, col 19 of module PingSync: 40
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 79, col 6 to line 79, col 28 of module PingSync: 3
+  line 80, col 6 to line 80, col 28 of module PingSync: 32
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 79, col 6 to line 79, col 17 of module PingSync: 2
+  |line 80, col 6 to line 80, col 17 of module PingSync: 24
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 80, col 6 to line 80, col 32 of module PingSync: 2
+  line 81, col 6 to line 81, col 32 of module PingSync: 16
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 80, col 6 to line 80, col 18 of module PingSync: 1
+  |line 81, col 6 to line 81, col 18 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 81, col 6 to line 81, col 21 of module PingSync: 1
+  line 82, col 6 to line 82, col 21 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 82, col 6 to line 84, col 48 of module PingSync: 1
+  line 83, col 6 to line 85, col 48 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<MessagePingRequest line 90, col 1 to line 90, col 18 of module PingSync>: 0:0
+<MessagePingRequest line 91, col 1 to line 91, col 18 of module PingSync>: 4:8
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 91, col 6 to line 91, col 30 of module PingSync: 3
+  line 92, col 6 to line 92, col 30 of module PingSync: 44
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 92, col 6 to line 92, col 30 of module PingSync: 2
+  |line 92, col 6 to line 92, col 19 of module PingSync: 36
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 93, col 6 to line 93, col 32 of module PingSync: 1
+  line 93, col 6 to line 93, col 30 of module PingSync: 28
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 94, col 6 to line 94, col 21 of module PingSync: 0
+  |line 93, col 6 to line 93, col 17 of module PingSync: 20
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 95, col 6 to line 95, col 49 of module PingSync: 0
+  line 94, col 6 to line 94, col 32 of module PingSync: 24
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 94, col 6 to line 94, col 18 of module PingSync: 16
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 95, col 6 to line 95, col 21 of module PingSync: 8
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 96, col 6 to line 96, col 49 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<MessagePongRequest line 99, col 1 to line 99, col 18 of module PingSync>: 0:0
+<MessagePongRequest line 103, col 1 to line 103, col 18 of module PingSync>: 4:8
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 100, col 6 to line 100, col 28 of module PingSync: 3
+  line 104, col 6 to line 104, col 28 of module PingSync: 39
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 103, col 6 to line 103, col 21 of module PingSync: 0
+  |line 104, col 6 to line 104, col 19 of module PingSync: 32
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 104, col 6 to line 105, col 51 of module PingSync: 0
+  line 105, col 6 to line 105, col 30 of module PingSync: 15
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 105, col 6 to line 105, col 17 of module PingSync: 8
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 106, col 6 to line 106, col 32 of module PingSync: 15
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 106, col 6 to line 106, col 18 of module PingSync: 8
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 107, col 6 to line 107, col 21 of module PingSync: 7
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 107, col 14 to line 107, col 21 of module PingSync: 8
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 108, col 6 to line 109, col 51 of module PingSync: 7
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 108, col 16 to line 109, col 51 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<MessageInitiateChange line 114, col 1 to line 114, col 21 of module PingSync>: 1:1
+<MessageInitiateChange line 119, col 1 to line 119, col 21 of module PingSync>: 4:8
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 115, col 6 to line 115, col 28 of module PingSync: 4
+  line 120, col 6 to line 120, col 28 of module PingSync: 35
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 115, col 6 to line 115, col 19 of module PingSync: 3
+  |line 120, col 6 to line 120, col 19 of module PingSync: 27
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 116, col 6 to line 116, col 28 of module PingSync: 2
+  line 121, col 6 to line 121, col 28 of module PingSync: 16
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 116, col 6 to line 116, col 17 of module PingSync: 1
+  |line 121, col 6 to line 121, col 17 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 117, col 6 to line 117, col 32 of module PingSync: 2
+  line 122, col 6 to line 122, col 32 of module PingSync: 16
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  |line 117, col 6 to line 117, col 18 of module PingSync: 1
+  |line 122, col 6 to line 122, col 18 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 118, col 6 to line 118, col 21 of module PingSync: 1
+  line 123, col 6 to line 123, col 21 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 119, col 6 to line 119, col 51 of module PingSync: 1
+  line 124, col 6 to line 124, col 51 of module PingSync: 8
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2772:0 @!@!@
-<Next line 122, col 1 to line 122, col 4 of module PingSync (122 9 122 23)>: 0:3
+<WorldConnectOrNo line 128, col 1 to line 128, col 16 of module PingSync>: 4:8
 @!@!@ENDMSG 2772 @!@!@
 @!@!@STARTMSG 2221:0 @!@!@
-  line 122, col 9 to line 122, col 23 of module PingSync: 3
+  line 129, col 6 to line 129, col 34 of module PingSync: 31
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  |line 129, col 6 to line 129, col 18 of module PingSync: 23
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 131, col 9 to line 132, col 28 of module PingSync: 8
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<Next line 138, col 1 to line 138, col 4 of module PingSync (138 9 138 22)>: 0:40
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 138, col 9 to line 138, col 22 of module PingSync: 40
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2774:0 @!@!@
+<TypeOK line 156, col 1 to line 156, col 6 of module PingSync>
+@!@!@ENDMSG 2774 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 156, col 11 to line 157, col 28 of module PingSync: 21
 @!@!@ENDMSG 2221 @!@!@
 @!@!@STARTMSG 2202:0 @!@!@
 End of statistics.
 @!@!@ENDMSG 2202 @!@!@
 @!@!@STARTMSG 2200:0 @!@!@
-Progress(3) at 2022-08-01 22:20:45: 6 states generated (143 s/min), 3 distinct states found (71 ds/min), 0 states left on queue.
+Progress(21) at 2022-08-02 20:39:46: 41 states generated (901 s/min), 21 distinct states found (461 ds/min), 0 states left on queue.
 @!@!@ENDMSG 2200 @!@!@
 @!@!@STARTMSG 2199:0 @!@!@
-6 states generated, 3 distinct states found, 0 states left on queue.
+41 states generated, 21 distinct states found, 0 states left on queue.
 @!@!@ENDMSG 2199 @!@!@
 @!@!@STARTMSG 2194:0 @!@!@
-The depth of the complete state graph search is 3.
+The depth of the complete state graph search is 21.
 @!@!@ENDMSG 2194 @!@!@
 @!@!@STARTMSG 2268:0 @!@!@
-The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 1 and the 95th percentile is 1).
+The average outdegree of the complete state graph is 1 (minimum is 1, the maximum 1 and the 95th percentile is 1).
 @!@!@ENDMSG 2268 @!@!@
 @!@!@STARTMSG 2186:0 @!@!@
-Finished in 2531ms at (2022-08-01 22:20:45)
+Finished in 2747ms at (2022-08-02 20:39:46)
 @!@!@ENDMSG 2186 @!@!@
