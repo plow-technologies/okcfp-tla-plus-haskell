@@ -22,29 +22,26 @@ import Data.Functor.Identity(Identity)
 import GHC.Generics (Generic)
 
 
-data TestNetworkState = Active | Inactive 
+data NetworkState = Active | Inactive 
   deriving (Read,Eq,Show,Generic)
+
+data Status = Connected | Unconnected
+  deriving (Read,Eq,Show,Generic)
+
+data Messages a = None | Ping | Pong | Change a
+
 
 data TestNetworkProfile = N1 | N2 
   deriving (Read,Eq,Show,Generic)
 
-data TestStatus = Connected | Unconnected
-  deriving (Read,Eq,Show,Generic)
-
-data Messages = None | Ping | Pong | Change 
-
------------------------------------------------------
--- Envionrment and Monad Reader
---------------------------------------------------
-type PingSyncM = Monad.Reader.ReaderT SystemEnv IO
-type PingSyncTestM = Monad.Reader.ReaderT SystemEnv Identity
-
-data SystemEnv = SystemEnv
-  { env :: ()}
 
 
-newtype Time = Time { unTime :: Int}
+data State p = State {
+  currentNetworkProfile :: p, 
+  previousNetworkProfile :: p 
+}
 
+type SystemState m = State (NetworkProfile m)
 
 -- | Our time type, usually UTCTime in prod and Int in testing
 -- We are going to assume given states in our tla model of:
@@ -55,30 +52,82 @@ newtype Time = Time { unTime :: Int}
 
 class PingSyncSharedTypes (m:: (Kind.Type -> Kind.Type )) where
   type Tick m  :: Kind.Type 
-  type Status m
-  type NetworkState m
   type NetworkProfile m 
-  type SystemState m 
+  
+
+class PingSyncSharedTypes m => HasTimer m  where
+  getTick :: m  (Tick m)  
 
 -- | in the live system these would be the effects gathered by network
 -- actions 
 class PingSyncSharedTypes m =>   PingSyncNetworkEff m where
-  getTick :: m  (Tick m)
-  getNetworkState :: m (NetworkState m)
+  getNetworkState :: m NetworkState
+  setNetworkState :: NetworkState -> m NetworkState
   getNetworkProfile :: m (NetworkProfile m)  
-  getStatus :: m (Status m)
-
+  setNetworkProfile :: (NetworkProfile m) -> m (NetworkProfile m)
+  getStatus :: m Status 
+  getMessage :: m (Messages (NetworkProfile m))
+    
 -- | In the live system these would be the effects gathered by persistence
-
 class PingSyncSharedTypes m => PingSyncStorageEff m where
-   getSystemState :: m (SystemState m)  
-   modifySystemState :: ((SystemState m) -> (SystemState m)) -> m (SystemState m)
-   putSystemState :: (SystemState m) -> m ()
+  getSystemState :: m (SystemState m)  
+  modifySystemState :: ((SystemState m) -> (SystemState m)) -> m (SystemState m)
+  putSystemState :: (SystemState m) -> m ()
+   
+-----------------------------------------------------
+-- Envionrment and Monad Reader
+--------------------------------------------------
+type PingSyncM = Monad.Reader.ReaderT SystemEnv IO
+type PingSyncTestM = Monad.Reader.ReaderT SystemEnv Identity
+
+data SystemEnv = SystemEnv
+  { env :: ()}
 
 
 
-runSystem :: IO () 
-runSystem = putStrLn "System Started"
+
+newtype Time = Time { unTime :: Int}
+
+
+
+
+runActionsOnMessageChange
+  :: Monad m =>
+     PingSyncNetworkEff m =>
+     PingSyncStorageEff m =>
+     (NetworkProfile m -> m a) -> m ()
+runActionsOnMessageChange action = do
+  msgs <- getMessage 
+  case msgs of 
+    Change prof -> action prof >> return ()
+    _ -> return ()
+
+runSystem :: forall m . Monad m => 
+             PingSyncNetworkEff m =>
+             PingSyncStorageEff m =>
+             m ()   
+runSystem = do
+  runActionsOnMessageChange deactivateSystem
+
+
+deactivateSystem
+  :: forall m .
+     PingSyncStorageEff m =>
+     PingSyncNetworkEff m =>
+     Monad m => 
+     NetworkProfile m -> m (State (NetworkProfile m))
+deactivateSystem prof = do
+  _ <- setNetworkState Inactive 
+  activeProf <- setNetworkProfile prof
+  modifySystemState (\p -> let lastProfile = currentNetworkProfile p
+                           in  p {previousNetworkProfile = lastProfile,
+                                  currentNetworkProfile = activeProf
+                                                                    })  
+  
+
+
+runSystemIO :: IO () 
+runSystemIO = putStrLn "System Started"
   
 
   
