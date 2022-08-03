@@ -36,12 +36,13 @@ data TestNetworkProfile = N1 | N2
 
 
 
-data State p = State {
+data State p t = State {
   currentNetworkProfile :: p, 
-  previousNetworkProfile :: p 
+  previousNetworkProfile :: p,
+  timeout :: t 
 }
 
-type SystemState m = State (NetworkProfile m)
+type SystemState m = State (NetworkProfile m) (Tick m)
 
 -- | Our time type, usually UTCTime in prod and Int in testing
 -- We are going to assume given states in our tla model of:
@@ -115,7 +116,7 @@ deactivateSystem
      PingSyncStorageEff m =>
      PingSyncNetworkEff m =>
      Monad m => 
-     NetworkProfile m -> m (State (NetworkProfile m))
+     NetworkProfile m -> m (SystemState m)
 deactivateSystem prof = do
   _ <- setNetworkState Inactive 
   activeProf <- setNetworkProfile prof
@@ -123,6 +124,15 @@ deactivateSystem prof = do
                            in  p {previousNetworkProfile = lastProfile,
                                   currentNetworkProfile = activeProf
                                                                     })  
+  
+checkForConnection st = loop 
+  where
+    loop = do
+      conn <- getStatus
+      case conn of 
+        Connected -> _
+        Unconnected -> _
+          
   
 
 

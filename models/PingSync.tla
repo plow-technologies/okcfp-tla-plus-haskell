@@ -48,10 +48,10 @@ vars == << server, time >>
 
 NetworkState == { "Active", "InActive" } 
 NetworkProfile == { "N1","N2"}
-Status ==  {"Connected", "Unconnected"}
+Status ==  {"Connected", "Unconnected", "Timeout"}
 Messages == {"None", "Ping","Pong", "Change"}
 
-Time == {t \in Nat: t < TimeLimit }
+Time == {t \in Nat: t < (TimeLimit + 10) }
 
 (* -------------------------------------------------- *)
 (* Tuples / Records  *)
@@ -105,10 +105,16 @@ MessagePongRequest ==
   /\ server.state = "InActive"
   /\ server.status = "Connected"
   /\ time' = time + 1
-  /\ server' = [server EXCEPT !.message = "None",
+  /\ server' = [server EXCEPT !.message = "Pong",
                               !.state = "Active"  ] 
 
-
+\* MessageTimeout ==
+\*  /\ server.message = "Ping"
+\*  /\ server.state = "InActive" 
+\*  /\ time > TimeLimit
+\*  /\ server' = [server EXCEPT
+  
+  
 (* The Change sequences beginning with network change *)
   (* These represent the 'good' path *)
 MessageResponseToChange == 
@@ -122,6 +128,8 @@ MessageInitiateChange ==
   /\ server.status = "Connected"
   /\ time' = time + 1
   /\ server' = [server EXCEPT !.message = "Change"]
+
+
 
 
 (* choose whether the network reconnects *)
