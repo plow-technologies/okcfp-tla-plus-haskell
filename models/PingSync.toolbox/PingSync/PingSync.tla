@@ -29,7 +29,8 @@ EXTENDS Naturals
 (* -------------------------------------------------- *)
 
 
-CONSTANTS TimeLimit
+CONSTANTS TimeLimit, MaxTime
+
 
 (* -------------------------------------------------- *)
 (* Variables *)
@@ -48,17 +49,17 @@ vars == << server, time >>
 
 NetworkState == { "Active", "InActive" } 
 NetworkProfile == { "N1","N2"}
-Status ==  {"Connected", "Unconnected"}
+Status ==  {"Connected", "Unconnected", "Timeout"}
 Messages == {"None", "Ping","Pong", "Change"}
 
-Time == {t \in Nat: t < TimeLimit }
+Time == {t \in Nat: t < (TimeLimit + MaxTime) }
 
 (* -------------------------------------------------- *)
 (* Tuples / Records  *)
 (* -------------------------------------------------- *)
 
 Server == [ state : NetworkState ,
-           profile : NetworkProfile,
+           profile : NetworkProfile,          
            status : Status,
            message : Messages ]
            
@@ -81,7 +82,8 @@ MessageChangeRequest ==
   /\ server.status = "Connected"
   /\ time' = time + 1
   /\ server' = [server EXCEPT !.state = "InActive",
-                              !.status = "Unconnected",
+                                !.status = "Unconnected",
+                                !.message = "None",
                               !.profile = "N2" ]
 
 
@@ -89,7 +91,7 @@ MessageChangeRequest ==
 (* We ping out to see if we can count it as active *)
 
 MessagePingRequest == 
-  /\ server.message = "Change"
+  /\ server.message = "None"
   /\ server.state = "InActive"
   /\ server.status = "Connected"
   /\ time' = time + 1
@@ -98,36 +100,52 @@ MessagePingRequest ==
 
 
 
-(* The server is still inactive but the network connection is back *)
+(* The server is still inactive but the network *)
+(* connection is back *)
 (* We see a Pong and so set the connection active *)
 MessagePongRequest ==
   /\ server.message = "Ping"
   /\ server.state = "InActive"
   /\ server.status = "Connected"
   /\ time' = time + 1
-  /\ server' = [server EXCEPT !.message = "None",
+  /\ server' = [server EXCEPT !.message = "Pong",
                               !.state = "Active"  ] 
 
+MessageTimeout ==
+  /\ server.state = "InActive" 
+  /\ server.status # "Timeout"
+  /\ time >= TimeLimit
+  /\ time < TimeLimit + MaxTime  
+  /\ time' = time + 1
+  /\ server' = [server EXCEPT !.status = "Timeout"  ]
 
-(* The Change sequences beginning with network change *)
-  (* These represent the 'good' path *)
+MessageResponseToTimeout ==
+  /\ server.state  = "InActive" 
+  /\ server.status = "Timeout"
+  /\ time' = time + 1    
+  /\ server' = [server EXCEPT !.profile = "N1",
+                              !.state = "Active",   
+                              !.status = "Unconnected",  
+                              !.message = "None"  ]    
+  
 MessageResponseToChange == 
-     \/ MessageChangeRequest
+     \/ MessageChangeRequest 
      \/ MessagePingRequest
      \/ MessagePongRequest
-
+     \/ MessageTimeout
+     \/ MessageResponseToTimeout  
+  
 MessageInitiateChange ==
   /\ server.message = "None"
   /\ server.state = "Active"
   /\ server.status = "Connected"
   /\ time' = time + 1
-  /\ server' = [server EXCEPT !.message = "Change"]
+  /\ server' = [server EXCEPT !.message = "Change" ]
 
-
-(* choose whether the network reconnects *)
 WorldConnectOrNo ==
   /\ server.status = "Unconnected"
-  /\ LET Connection == CHOOSE c \in Status : c \in Status
+  /\ LET Connection == CHOOSE c \in Status :
+                                   c \in {"Unconnected","Connected"}
      IN /\  server' = [server EXCEPT !.status = Connection]
         /\  time' = time + 1
   
@@ -137,37 +155,35 @@ WorldActions ==
   
 Next == UNCHANGED vars 
       \/ MessageResponseToChange
-      \/ MessageInitiateChange
+      \/ (MessageInitiateChange /\ time < TimeLimit)
       \/ WorldConnectOrNo  
-(* -------------------------------------------------- *)
-(* Properties  *)
-(* -------------------------------------------------- *)
 
-
-(*  Messages can't come in when your server is unconnected *)
 NoMessagesProp == [][server.status = "Unconnected" =>
                     server'.message = "None" ]_vars
 
-EventualPong == <>(server.message = "Ping") 
+EventualPong == <>(server.message = "Pong") 
 
-Properties == NoMessagesProp /\ EventualPong
+SometimesTimeout == (time >= TimeLimit) ~>  (server.state = "Timeout")
+
+  
+Properties == NoMessagesProp /\
+                EventualPong /\
+                SometimesTimeout
 
 
 TypeOK == server \in Server
     /\         time \in Time   
 
-(* -------------------------------------------------- *)
-(* Model Format  *)
-(* -------------------------------------------------- *)
+
 
 SPEC == Init
  /\ ( [][Next]_vars ) 
- /\ WF_vars(Next) 
+ /\ SF_vars(Next) 
  
  
 
 
 =============================================================================
 \* Modification History
-\* Last modified Tue Aug 02 20:38:17 CDT 2022 by scott
+\* Last modified Wed Aug 03 23:33:03 CDT 2022 by scott
 \* Created Fri Jul 15 20:15:56 CDT 2022 by scott
